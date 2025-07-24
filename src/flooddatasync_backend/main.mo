@@ -4,9 +4,7 @@ import Time "mo:base/Time";
 import Principal "mo:base/Principal";
 import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
-import Debug "mo:base/Debug";
-import Runtime "mo:base/Runtime";
-import IC "mo:base/IC";
+import Nat64 "mo:base/Nat64";
 
 
 actor FloodDataSync {
@@ -23,9 +21,9 @@ actor FloodDataSync {
   var floodReports = HashMap.HashMap<Text, Report>(16, Text.equal, Text.hash);
 
   public func submitReport(location: Text, waterLevel: Float): async Text {
-    let id = "report-" # Nat.toText(Nat64.toNat(Time.now()));
-    let caller = Runtime.caller();
-    let report: Report = {
+    let id = "report-" # Nat.toText(Nat64.toNat(Nat64.fromIntWrap(Time.now())));
+    let caller = Principal.fromActor(FloodDataSync); 
+    let report : Report = {
       id = id;
       location = location;
       timestamp = Time.now();
@@ -36,7 +34,6 @@ actor FloodDataSync {
     floodReports.put(id, report);
     return id;
   };
-
   public func verifyReport(id: Text): async Bool {
     switch (floodReports.get(id)) {
       case null { return false };
