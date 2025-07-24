@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "flooddatasync_backend": {
+      "main": "src/flooddatasync_backend/main.mo",
+      "type": "motoko"
+    },
+    "flooddatasync_frontend": {
+      "dependencies": [
+        "flooddatasync_backend"
+      ],
+      "source": [
+        "src/flooddatasync_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "flooddatasync_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
