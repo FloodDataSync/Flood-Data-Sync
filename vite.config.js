@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+
   plugins: [
     react(),
     VitePWA({
@@ -15,6 +16,7 @@ export default defineConfig({
         theme_color: '#1976d2',
         background_color: '#ffffff',
         display: 'standalone',
+        
         start_url: '/',
         icons: [
           {
@@ -30,5 +32,10 @@ export default defineConfig({
         ]
       }
     })
-  ]
+  ],
+  build: {
+    rollupOptions: {
+      external: ['@dfinity/agent', '@dfinity/candid']
+    }
+  },
 })

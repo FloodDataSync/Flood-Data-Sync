@@ -1,0 +1,23 @@
+type Report = 
+ record {
+   description: text;
+   floodType: text;
+   id: text;
+   imageUrl: text;
+   location: Location;
+   reportedBy: principal;
+   timestamp: int;
+   verified: bool;
+ };
+type Location = 
+ record {
+   accuracy: opt float64;
+   latitude: float64;
+   longitude: float64;
+ };
+service : {
+  getReports: () -> (vec Report) query;
+  submitReport: (description: text, floodType: text, location: Location,
+   imageUrl: text) -> (text);
+  verifyReport: (id: text) -> (bool);
+}

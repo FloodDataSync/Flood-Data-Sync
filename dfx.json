@@ -11,8 +11,7 @@
       "source": [
         "src/flooddatasync_frontend/dist"
       ],
-      "type": "assets",
-      "workspace": "flooddatasync_frontend"
+      "type": "assets"
     }
   },
   "defaults": {

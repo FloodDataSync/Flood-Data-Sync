@@ -1,0 +1,17 @@
+// Version: 1.0.0
+type Location__936765695 =
+  {accuracy : ?Float; latitude : Float; longitude : Float};
+type Report__516934695 =
+  {
+    description : Text;
+    floodType : Text;
+    id : Text;
+    imageUrl : Text;
+    location : Location__936765695;
+    reportedBy : Principal;
+    timestamp : Int;
+    verified : Bool
+  };
+actor {
+  stable var stableReportsEntries : [(Text, Report__516934695)]
+};

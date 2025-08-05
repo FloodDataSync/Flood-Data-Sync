@@ -1,25 +1,30 @@
-import { 
-  Box, 
-  Button, 
-  Typography, 
-  TextField, 
-  MenuItem, 
-  Paper, 
-  Stack, 
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  MenuItem,
+  Paper,
+  Stack,
   Alert,
   LinearProgress,
   Chip,
   Divider,
   Container
 } from "@mui/material";
+
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import FloodIcon from "@mui/icons-material/Flood";
 import SecurityIcon from "@mui/icons-material/Security";
+
 import { useState } from "react";
 import * as yup from "yup";
 import { SuccessState, ErrorState } from "../components/SubmissionStates";
 import { themeConfig } from "../theme";
+import { flooddatasync_backend } from "../../src/declarations/flooddatasync_backend";
+
+
 
 const floodTypes = [
   { value: "river", label: "River Flood" },
@@ -166,44 +171,31 @@ function ReportForm() {
     }
 
     try {
-      // Prepare form data for submission
-      const submissionData = new FormData();
-      submissionData.append('description', formData.description);
-      submissionData.append('floodType', formData.floodType);
-      submissionData.append('latitude', location.latitude);
-      submissionData.append('longitude', location.longitude);
-      submissionData.append('accuracy', location.accuracy);
-      if (selectedImage) {
-        submissionData.append('image', selectedImage);
-      }
-      submissionData.append('timestamp', new Date().toISOString());
+  // Prepare and submit the report using flood_reporter
+  const result = await flooddatasync_backend.submitReport({
+    description: formData.description,
+    floodType: formData.floodType,
+    location: {
+      latitude: location.latitude,
+      longitude: location.longitude,
+      accuracy: location.accuracy
+    },
+    imageData: new Uint8Array(await selectedImage.arrayBuffer()), // converts file to Uint8Array
+    timestamp: new Date().toISOString()
+  });
 
-      // Mock submission to the endpoint
-      const response = await fetch('https://marquis.org/v1/form', {
-        method: 'POST',
-        body: submissionData,
-        headers: {
-          // Don't set Content-Type for FormData, let browser set it with boundary
-        }
-      });
+  console.log('Submission successful:', result);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log('Submission successful:', result);
-      
-      // Reset form on success
-      setFormData({ description: "", floodType: "" });
-      setSelectedImage(null);
-      setImagePreview(null);
-      setLocation(null);
-      setErrors({});
-      setSubmitSuccess(true);
-      setSubmissionState("success");
-      
-    } catch (error) {
+  // Reset form on success
+  setFormData({ description: "", floodType: "" });
+  setSelectedImage(null);
+  setImagePreview(null);
+  setLocation(null);
+  setErrors({});
+  setSubmitSuccess(true);
+  setSubmissionState("success");
+  
+} catch (error) {
       console.error('Submission error:', error);
       // Since this is a mock endpoint, we'll simulate success after showing the attempt
       const errorMessage = `Mock submission attempted to https://marquis.org/v1/form. ${error.message}`;

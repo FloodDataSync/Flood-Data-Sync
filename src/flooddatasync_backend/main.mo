@@ -7,14 +7,30 @@ import Nat "mo:base/Nat";
 import Int "mo:base/Int";
 
 persistent actor class FloodDataSync() {
-  type Report = {
-    id: Text;
-    location: Text;
-    timestamp: Int;
-    waterLevel: Float;
-    reportedBy: Principal;
-    verified: Bool;
-  };
+  type FloodType = {
+  #River;
+  #Flash;
+  #Coastal;
+  #Urban;
+};
+
+type Location = {
+  latitude: Float;
+  longitude: Float;
+  accuracy: ?Float;
+};
+
+type Report = {
+  id: Text;
+  description: Text;
+  floodType: Text;
+  location: Location;
+  timestamp: Int;
+  imageUrl: Text; 
+  reportedBy: Principal;
+  verified: Bool;
+};
+
 
   private transient var floodReports = HashMap.HashMap<Text, Report>(16, Text.equal, Text.hash);
 
@@ -34,22 +50,29 @@ persistent actor class FloodDataSync() {
     stableReportsEntries := [];
   };
 
-  public shared({ caller }) func submitReport(location: Text, waterLevel: Float): async Text {
-    let now = Int.abs(Time.now());
-    let id = "report-" # Nat.toText(now);
+  public shared({ caller }) func submitReport(
+  description: Text,
+  floodType: Text,
+  location: Location,
+  imageUrl: Text
+): async Text {
+  let now = Int.abs(Time.now());
+  let id = "report-" # Nat.toText(now);
 
-    let report: Report = {
-      id = id;
-      location = location;
-      timestamp = now;
-      waterLevel = waterLevel;
-      reportedBy = caller;
-      verified = false;
-    };
-
-    floodReports.put(id, report);
-    return id;
+  let report: Report = {
+    id = id;
+    description = description;
+    floodType = floodType;
+    location = location;
+    timestamp = now;
+    imageUrl = imageUrl;
+    reportedBy = caller;
+    verified = false;
   };
+  floodReports.put(id, report);
+  return id;
+};
+
 
   public shared func verifyReport(id: Text): async Bool {
     switch (floodReports.get(id)) {
