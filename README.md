@@ -53,3 +53,67 @@ Flood Data Sync is a modern, community-driven flood reporting and emergency resp
 ---
 
 For questions or contributions, please open an issue or pull request.
+
+
+<!-- Steps for settiind up the Flood Data Sync with ICP -->
+# Create a plain text README setup file for Flood Data Sync
+readme_text = """\
+FloodDataSync - Setup Guide
+===========================
+
+FloodDataSync is a real-time flood incident reporting system built on the Internet Computer using Motoko (backend), React (frontend), and Vite.
+
+Tech Stack:
+-----------
+- Frontend: React + Vite + MUI (Material UI)
+- Backend: Motoko (ICP Canister)
+- Network: Internet Computer (Local or Mainnet)
+- Package Manager: NPM
+- Build Tool: DFX SDK (Dfinity)
+
+
+
+Setup Instructions:
+-------------------
+
+1. Clone the repo
+   git clone https://github.com/your-username/Flood-Data-Sync.git
+   cd Flood-Data-Sync
+
+2. Install dependencies
+   npm install
+
+3. Install the DFX SDK
+   sh -ci "$(curl -fsSL https://smartcontracts.org/install.sh)"
+   dfx --version
+
+4. Start the local replica
+   dfx start --background
+
+5. Deploy all canisters
+   dfx deploy
+
+Running Frontend (Development Mode):
+------------------------------------
+cd src/flooddatasync_frontend
+npm run dev
+
+Access the app:
+---------------
+- Open your browser and go to: http://localhost:5173
+
+Troubleshooting:
+----------------
+- Ensure DFX is installed and in your PATH
+- Make sure the backend canister is compiled and running
+- If using imports from @dfinity/agent, install the required dependencies:
+  npm install @dfinity/agent
+
+"""
+
+# Save to a text file
+file_path = "/mnt/data/FloodDataSync_Setup.txt"
+with open(file_path, "w") as f:
+    f.write(readme_text)
+
+file_path
